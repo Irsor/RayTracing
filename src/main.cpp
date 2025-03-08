@@ -5,8 +5,23 @@
 
 #include "Ray.hpp"
 
+bool hitSphere(const Point3& center, double radius, const Ray& ray)
+{
+    Vec3 oc = center - ray.getOrigin();
+    auto a = dot(ray.getDirection(), ray.getDirection());
+    auto b = -2.0 * dot(ray.getDirection(), oc);
+    auto c = dot(oc, oc) - radius * radius;
+    auto discriminant = b * b - 4 * a * c;
+    return (discriminant >= 0);
+}
+
 Color rayColor(const Ray& ray)
 {
+    if (hitSphere(Point3(0, 0, -1), 0.5, ray))
+    {
+        return Color(1, 0, 0);
+    }
+
     Vec3 unitDirecton = unitVector(ray.getDirection());
     auto a = 0.5 * (unitDirecton.y() + 1.0);
     return (1.0 - a) * Color(1.0, 1.0, 1.0) + a * Color(0.5, 0.7, 1.0);
@@ -23,7 +38,7 @@ int main()
     imageHeight = (imageHeight < 1) ? 1 : imageHeight;
 
     // Камера
-    auto focalLength = 1.0; 
+    auto focalLength = 1.0;
     auto viewportHeight = 2.0; 
     auto viewportWidth = viewportHeight * (double(imageWidth) / imageHeight);
     auto cameraCenter = Point3(0, 0, 0);
