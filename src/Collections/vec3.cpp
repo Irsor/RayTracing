@@ -1,91 +1,100 @@
-#include "Vec3.hpp"
+#include "vec3.hpp"
+
+Vec3::Vec3() : values{ 0, 0, 0 } {}
+Vec3::Vec3(double x, double y, double z) : values{ x, y, z } {}
+
+double Vec3::x() const { return values[0]; }
+double Vec3::y() const { return values[1]; }
+double Vec3::z() const { return values[2]; }
+
+Vec3 Vec3::operator-() const { return Vec3(-values[0], -values[1], -values[2]); }
+double Vec3::operator[](int i) const { return values[i]; }
+double& Vec3::operator[](int i) { return values[i]; }
 
 Vec3& Vec3::operator+=(const Vec3& v)
 {
-	values[0] += v.values[0];
-	values[1] += v.values[1];
-	values[2] += v.values[2];
-	return *this;
+    values[0] += v.values[0];
+    values[1] += v.values[1];
+    values[2] += v.values[2];
+    return *this;
 }
 
 Vec3& Vec3::operator*=(double t)
 {
-	values[0] *= t;
-	values[1] *= t;
-	values[2] *= t;
-	return *this;
+    values[0] *= t;
+    values[1] *= t;
+    values[2] *= t;
+    return *this;
 }
 
 Vec3& Vec3::operator/=(double t)
 {
-	return *this *= 1 / t;
+    return *this *= 1 / t;
 }
 
 double Vec3::length() const
 {
-	return std::sqrt(lengthSquared());
+    return std::sqrt(lengthSquared());
 }
 
 double Vec3::lengthSquared() const
 {
-	return values[0] * values[0] + values[1] * values[1] + values[2] * values[2];
+    return values[0] * values[0] + values[1] * values[1] + values[2] * values[2];
 }
 
 std::array<double, 3> Vec3::getValues() const
 {
-	return values;
+    return values;
 }
 
-inline std::ostream& operator<<(std::ostream& out, const Vec3& v)
+std::ostream& operator<<(std::ostream& out, const Vec3& v)
 {
-	return out << v.getValues()[0] << ' ' << v.getValues()[1] << ' ' << v.getValues()[2];
+    return out << v.x() << ' ' << v.y() << ' ' << v.z();
 }
 
-inline Vec3 operator+(const Vec3& u, const Vec3& v)
+Vec3 operator+(const Vec3& u, const Vec3& v)
 {
-	return Vec3(u.getValues()[0] + v.getValues()[0], u.getValues()[1] + v.getValues()[1], u.getValues()[2] + v.getValues()[2]);
+    return Vec3(u.x() + v.x(), u.y() + v.y(), u.z() + v.z());
 }
 
-inline Vec3 operator-(const Vec3& u, const Vec3& v)
+Vec3 operator-(const Vec3& u, const Vec3& v)
 {
-	return Vec3(u.getValues()[0] - v.getValues()[0], u.getValues()[1] - v.getValues()[1], u.getValues()[2] - v.getValues()[2]);
+    return Vec3(u.x() - v.x(), u.y() - v.y(), u.z() - v.z());
 }
 
-inline Vec3 operator*(const Vec3& u, const Vec3& v)
+Vec3 operator*(const Vec3& u, const Vec3& v)
 {
-	return Vec3(u.getValues()[0] * v.getValues()[0], u.getValues()[1] * v.getValues()[1], u.getValues()[2] * v.getValues()[2]);
+    return Vec3(u.x() * v.x(), u.y() * v.y(), u.z() * v.z());
 }
 
-inline Vec3 operator*(double t, const Vec3& v)
+Vec3 operator*(double t, const Vec3& v)
 {
-	return Vec3(t * v.getValues()[0], t * v.getValues()[1], t * v.getValues()[2]);
+    return Vec3(t * v.x(), t * v.y(), t * v.z());
 }
 
-inline Vec3 operator*(const Vec3& v, double t)
+Vec3 operator*(const Vec3& v, double t)
 {
-	return t * v;
+    return t * v;
 }
 
-inline Vec3 operator/(const Vec3& v, double t)
+Vec3 operator/(const Vec3& v, double t)
 {
-	return (1 / t) * v;
+    return (1 / t) * v;
 }
 
-inline double dot(const Vec3& u, const Vec3& v)
+double dot(const Vec3& u, const Vec3& v)
 {
-	return u.getValues()[0] * v.getValues()[0]
-		+ u.getValues()[1] * v.getValues()[1]
-		+ u.getValues()[2] * v.getValues()[2];
+    return u.x() * v.x() + u.y() * v.y() + u.z() * v.z();
 }
 
-inline Vec3 cross(const Vec3& u, const Vec3& v)
+Vec3 cross(const Vec3& u, const Vec3& v)
 {
-	return Vec3(u.getValues()[1] * v.getValues()[2] - u.getValues()[2] * v.getValues()[1],
-		u.getValues()[2] * v.getValues()[0] - u.getValues()[0] * v.getValues()[2],
-		u.getValues()[0] * v.getValues()[1] - u.getValues()[1] * v.getValues()[0]);
+    return Vec3(u.y() * v.z() - u.z() * v.y(),
+        u.z() * v.x() - u.x() * v.z(),
+        u.x() * v.y() - u.y() * v.x());
 }
 
-inline Vec3 unitVector(const Vec3& v)
+Vec3 unitVector(const Vec3& v)
 {
-	return v / v.length();
+    return v / v.length();
 }

@@ -3,21 +3,56 @@
 #include "Collections/vec3.hpp"
 #include "Collections/color.hpp"
 
+#include "Ray.hpp"
+
+Color rayColor(const Ray& ray)
+{
+    Vec3 unitDirecton = unitVector(ray.getDirection());
+    auto a = 0.5 * (unitDirecton.y() + 1.0);
+    return (1.0 - a) * Color(1.0, 1.0, 1.0) + a * Color(0.5, 0.7, 1.0);
+}
+
 int main()
 {
     // Изображение
-    const int IMAGE_WIDTH = 256;
-    const int IMAGE_HEIGHT = 256;
+    auto aspectRatio = 16.0 / 9.0;
+    int imageWidth = 400;
+
+    // Вычисление высоты изображения и убеждение что оно хотя бы равно 1.
+    int imageHeight = int(imageWidth / aspectRatio);
+    imageHeight = (imageHeight < 1) ? 1 : imageHeight;
+
+    // Камера
+    auto focalLength = 1.0; 
+    auto viewportHeight = 2.0; 
+    auto viewportWidth = viewportHeight * (double(imageWidth) / imageHeight);
+    auto cameraCenter = Point3(0, 0, 0);
+
+    // Расчет граней области просмотра (правый верхний угол и левый нижний).
+    auto viewportU = Vec3(viewportWidth, 0, 0);
+    auto viewportV = Vec3(0, -viewportHeight, 0);
+
+    // Расчет горизонтальный и вертикальный дельты от пикселя к пикселю.
+    auto pixelDeltaU = viewportU / imageWidth;
+    auto pixelDeltaV = viewportV / imageHeight;
+
+    // Вычисление расположения левого верхнего пикселя.
+    auto viewportUpperLeft = cameraCenter - Vec3(0, 0, focalLength) - viewportU / 2 - viewportV / 2;
+    auto pixel00Location = viewportUpperLeft + 0.5 * (pixelDeltaU + pixelDeltaV);
 
     // Рендер
-    std::cout << "P3" << std::endl << IMAGE_WIDTH << ' ' << IMAGE_HEIGHT << std::endl << "255" << std::endl;
+    std::cout << "P3" << std::endl << imageWidth << ' ' << imageHeight << std::endl << "255" << std::endl;
 
-    for (int i = 0; i < IMAGE_HEIGHT; i++)
+    for (int i = 0; i < imageHeight; i++)
     {
-        std::clog << "Scanlines remaining: " << (IMAGE_HEIGHT - i) << ' ' << std::endl;
-        for (int j = 0; j < IMAGE_WIDTH; j++)
+        std::clog << "Scanlines remaining: " << (imageHeight - i) << ' ' << std::endl;
+        for (int j = 0; j < imageWidth; j++)
         {
-            auto pixelColor = Color(double(j) / (IMAGE_WIDTH - 1), double(i) / (IMAGE_HEIGHT - 1), 0);
+            auto pixelCenter = pixel00Location + (i * pixelDeltaV) + (j * pixelDeltaU);
+            auto rayDirection = pixelCenter - cameraCenter;
+            Ray r(cameraCenter, rayDirection);
+
+            Color pixelColor = rayColor(r);
             writeColor(std::cout, pixelColor);
         }
     }
