@@ -1,9 +1,9 @@
 ﻿#include <iostream>
 
-#include "Collections/vec3.hpp"
-#include "Collections/color.hpp"
+#include "Collections/Vec3.hpp"
+#include "Collections/Color.hpp"
 
-#include "Ray.hpp"
+#include "Objects/Ray.hpp"
 
 bool hitSphere(const Point3& center, double radius, const Ray& ray)
 {

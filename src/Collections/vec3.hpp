@@ -1,5 +1,4 @@
-#ifndef VEC3_HPP
-#define VEC3_HPP
+#pragma once
 
 #include <cmath>
 #include <iostream>
@@ -44,5 +43,3 @@ Vec3 operator/(const Vec3& v, double t);
 double dot(const Vec3& u, const Vec3& v);
 Vec3 cross(const Vec3& u, const Vec3& v);
 Vec3 unitVector(const Vec3& v);
-
-#endif // VEC3_HPP

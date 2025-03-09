@@ -1,4 +1,4 @@
-#include "color.hpp"
+#include "Color.hpp"
 
 void writeColor(std::ostream& out, const Color& pixelColor)
 {

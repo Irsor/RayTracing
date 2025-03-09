@@ -1,7 +1,6 @@
-#ifndef RAY_HPP
-#define RAY_HPP
+#pragma once
 
-#include "Collections/vec3.hpp"
+#include "../Collections/Vec3.hpp"
 
 class Ray
 {
@@ -20,5 +19,3 @@ private:
     Point3 origin;
     Vec3 direction;
 };
-
-#endif // RAY_HPP
